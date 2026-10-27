@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ArrowIcon } from "@/components/ui/icons";
-import { ekg } from "@/lib/site";
 
 type Key = "ekg" | "es-plus" | "golf-and-heels";
 
@@ -11,7 +10,7 @@ const all: Record<Key, { href: string; title: string; line: string; when: string
     href: "/ekg",
     title: "EKG",
     line: "The Heart of Our Money",
-    when: ekg.label,
+    when: "Speaking",
     tone: "from-navy-800 to-navy-950",
   },
   "es-plus": {

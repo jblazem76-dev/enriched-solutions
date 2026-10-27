@@ -4,12 +4,8 @@ import { useId, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
 import { site, type LeadSource } from "@/lib/site";
-
-type Status =
-  | { kind: "idle" }
-  | { kind: "submitting" }
-  | { kind: "success" }
-  | { kind: "error"; message: string; mailto?: boolean };
+import { inputClass, labelClass } from "./fieldStyles";
+import { submitLead, type FormStatus } from "./submitLead";
 
 type Props = {
   source: LeadSource;
@@ -21,11 +17,6 @@ type Props = {
   className?: string;
 };
 
-const inputClass =
-  "w-full rounded-full border border-gold-500/35 bg-ivory/[0.04] px-6 py-3.5 text-base text-ivory placeholder:text-ivory/40 transition-colors focus:border-gold-300 focus:bg-ivory/[0.07] focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-300/70";
-
-const labelClass = "mb-2 block pl-6 text-[0.65rem] font-medium uppercase tracking-[0.3em] text-gold-400";
-
 export function SignupForm({
   source,
   buttonLabel,
@@ -35,49 +26,24 @@ export function SignupForm({
   className,
 }: Props) {
   const uid = useId();
-  const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const [status, setStatus] = useState<FormStatus>({ kind: "idle" });
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (status.kind === "submitting") return;
     const form = new FormData(event.currentTarget);
     setStatus({ kind: "submitting" });
-
-    try {
-      const response = await fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+    setStatus(
+      await submitLead(
+        {
           name: String(form.get("name") ?? ""),
           email: String(form.get("email") ?? ""),
           hp_check_x7: String(form.get("hp_check_x7") ?? ""),
           source,
-        }),
-      });
-
-      if (response.ok) return setStatus({ kind: "success" });
-      if (response.status === 422) {
-        return setStatus({ kind: "error", message: "Please enter a valid email address." });
-      }
-      if (response.status === 503) {
-        return setStatus({
-          kind: "error",
-          message: "Sign-ups aren't switched on yet, so we couldn't save your details. Please email us and we'll add you.",
-          mailto: true,
-        });
-      }
-      return setStatus({
-        kind: "error",
-        message: "Something went wrong on our side. Please try again, or email us.",
-        mailto: true,
-      });
-    } catch {
-      return setStatus({
-        kind: "error",
-        message: "We couldn't reach the server. Check your connection and try again, or email us.",
-        mailto: true,
-      });
-    }
+        },
+        "Sign-ups aren't switched on yet, so we couldn't save your details. Please email us and we'll add you.",
+      ),
+    );
   }
 
   if (status.kind === "success") {

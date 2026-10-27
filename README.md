@@ -5,12 +5,12 @@ Website for [Enriched Solutions](https://www.enrichedsolutions.net): the home pa
 | Route | What it is | Status |
 | --- | --- | --- |
 | `/` | Home: **EKG**, **ES+** and **Golf & Heels** as three full-height chapters, then a path to the rest of the site | Designed |
-| `/ekg` | EKG: The Heart of Our Money, **11.17.26** | Designed. Event details are placeholders (see below) |
+| `/ekg` | EKG: The Heart of Our Money. A speaking engagement that can be booked for conferences, events or as a solo offering, with a booking form and the **11.17.26** appearance on the calendar | Designed. Time, venue, rates and the registration link are placeholders (see below) |
 | `/es-plus` | ES+ app: Coming 2027 | Designed |
 | `/golf-and-heels` | Golf & Heels: Spring 2027 | Designed |
-| `/consulting` `/speaking` `/about` | Short holding pages with the live site's copy | **Next pass** |
+| `/consulting` `/speaking` `/about` | Short holding pages with the live site's copy. `/speaking` features EKG and links to `/ekg` | **Next pass** |
 | `/privacy` `/terms` | Placeholders (`noindex`) | **Real text needed before launch** |
-| `POST /api/lead` | Receives sign-ups and forwards them to your webhook | Needs `LEAD_WEBHOOK_URL` |
+| `POST /api/lead` | Receives the forms and delivers them through the Resend API (or a webhook) | Needs `RESEND_API_KEY` and `LEAD_NOTIFY_EMAIL` |
 
 ## Stack
 
@@ -30,10 +30,25 @@ npx tsc --noEmit
 
 Copy `.env.example` to `.env.local`.
 
-- `LEAD_WEBHOOK_URL`: where sign-ups go (Zapier, Make, a Resend or Mailchimp automation, your own endpoint). It receives
-  `{ name, email, source, submittedAt, site }` as JSON. **Without it, `/api/lead` answers 503 and the forms tell visitors
-  to email instead.** It never pretends to have saved someone.
-- Site facts (name, email, social links, nav, the EKG date) live in `src/lib/site.ts`.
+The forms (the EKG booking request, and the ES+ and Golf & Heels sign-ups) post to `/api/lead`, which delivers them through
+the **Resend API**. Set these in your host's environment variables:
+
+- `RESEND_API_KEY`: a Resend key with sending access (resend.com/api-keys).
+- `LEAD_NOTIFY_EMAIL`: where the notification emails arrive. Each booking request is emailed here, and replying to that
+  email answers the person who filled in the form.
+- `LEAD_FROM_EMAIL` (optional): the sender. Until `enrichedsolutions.net` is verified in Resend, leave it empty: Resend's test
+  sender (`onboarding@resend.dev`) only delivers to the Resend account owner's own address, so set `LEAD_NOTIFY_EMAIL` to that
+  address. After verifying the domain, use e.g. `Enriched Solutions <hello@enrichedsolutions.net>`.
+- `RESEND_SEGMENT_ID` (optional): sign-ups (not booking requests) are also saved as contacts in this Resend segment.
+  Booking requests are only emailed: an organizer asking about EKG has not agreed to a marketing list.
+- `LEAD_WEBHOOK_URL` (alternative): any endpoint that accepts a JSON POST (Zapier, Make, your own API). Used only when
+  `RESEND_API_KEY` is empty.
+
+**With none of these set, `/api/lead` answers 503 and the forms tell visitors to email instead.** It never pretends to have
+saved a request. If delivery fails, the form shows an error with the email address; the server log records the status and
+Resend's error name, never the visitor's details.
+
+Site facts (name, email, social links, nav, the EKG date and registration link) live in `src/lib/site.ts`.
 
 ## Design system
 
@@ -60,8 +75,16 @@ reveals everything after 4 seconds).
 
 Nothing below was invented. Each item is marked in the page as "To be confirmed" or flagged in a code comment.
 
-1. **EKG details**: time, venue, format and tickets show "To be confirmed" (`/ekg#details`, search for `<Tbc />`). The three
-   one-line readings of Earn it / Keep it / Grow it in `src/app/ekg/page.tsx` are **draft copy**.
+1. **EKG details**: length, format and rates of the three ways to book, and the time and venue of 11.17.26, show "To be
+   confirmed" (search for `<Tbc />` in `src/app/ekg/page.tsx`). The three one-line readings of Earn it / Keep it / Grow it
+   and the copy for the three formats are **draft copy**.
+   - **Registration link for 11.17.26**: supplied by the buyer. Set `ekg.registrationUrl` in `src/lib/site.ts` and the
+     "Registration" row on `/ekg#next` turns into a working **Save my spot** button. Until then it says "Link coming soon".
+   - **After 11.17.26**, update or remove the "On the calendar" section in `src/app/ekg/page.tsx`. The countdown hides
+     itself once the date passes, but the section would still announce a past date.
+   - **Forms**: verify `enrichedsolutions.net` in Resend, then set `LEAD_FROM_EMAIL` (see Configuration). The contact-saving
+     call to Resend could not be checked against Resend's docs from the build environment, so send one test sign-up after
+     setting `RESEND_SEGMENT_ID` and confirm the contact appears. Notification emails are tested end to end against a mock.
 2. **Golf & Heels** is built from the live site's "Women's Growth Day: Indoor Golf Retreat" copy. **Please confirm they are the
    same event.** Exact date and venue are marked "To be confirmed".
 3. **Photos and logo files.** The golf still (`public/images/golf-heels-still.jpg`) is cropped from the hero sheet and is only

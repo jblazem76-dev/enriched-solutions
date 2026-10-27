@@ -8,13 +8,13 @@ import { Button } from "@/components/ui/Button";
 import { CloseIcon, MenuIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/cn";
 import { nav, site } from "@/lib/site";
-import { daysUntilEkg } from "./Countdown";
+
+const cta = { href: "/ekg#book", label: "Book EKG" };
 
 export function Header() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [ekgPassed, setEkgPassed] = useState(false);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
 
@@ -23,12 +23,6 @@ export function Header() {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // The page is statically prerendered, so "has the event passed?" must be answered in the browser.
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setEkgPassed(daysUntilEkg() < 0);
   }, []);
 
   // Close the menu on navigation.
@@ -55,10 +49,6 @@ export function Header() {
       window.removeEventListener("keydown", onKey);
     };
   }, [open]);
-
-  const cta = ekgPassed
-    ? { href: "/es-plus#waitlist", label: "Join the waitlist" }
-    : { href: "/ekg#register", label: "Save my spot" };
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
@@ -92,11 +82,6 @@ export function Header() {
                     )}
                   >
                     {item.label}
-                    {item.short && !ekgPassed && (
-                      <span className="rounded-full border border-gold-500/50 px-1.5 py-px text-[0.55rem] tracking-[0.15em] text-gold-400">
-                        {item.short}
-                      </span>
-                    )}
                     <span
                       aria-hidden="true"
                       className={cn(
@@ -151,7 +136,6 @@ export function Header() {
                   )}
                 >
                   <span>{item.label}</span>
-                  {item.short && !ekgPassed && <span className="eyebrow !text-[0.65rem]">{item.short}</span>}
                 </Link>
               </li>
             ))}

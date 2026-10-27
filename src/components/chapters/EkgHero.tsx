@@ -1,11 +1,9 @@
 import { PulseLine } from "@/components/art/PulseLine";
-import { Countdown } from "@/components/site/Countdown";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
-import { ekg } from "@/lib/site";
 import type { HeroProps } from "./types";
 
-/** EKG, "The Heart of Our Money". Navy ground, gold trace, 11.17.26. */
+/** EKG, "The Heart of Our Money". Navy ground, gold trace. A bookable speaking engagement, so no single date here. */
 export function EkgHero({ variant, id, className }: HeroProps) {
   const Title = variant === "page" ? "h1" : "h2";
   return (
@@ -72,30 +70,27 @@ export function EkgHero({ variant, id, className }: HeroProps) {
       </p>
 
       <p
-        className="mt-5 font-display text-[clamp(3.2rem,8vw,7rem)] font-medium leading-none tracking-[0.01em] text-ivory"
+        className="mt-9 font-display text-[clamp(1.6rem,3.2vw,2.9rem)] tracking-[0.02em] text-ivory/90"
         data-reveal
         style={{ "--reveal-delay": "100ms" } as React.CSSProperties}
-      >
-        <time dateTime={`${ekg.year}-${ekg.monthIndex + 1}-${ekg.day}`}>
-          <span className="sr-only">Tuesday, November 17, 2026</span>
-          <span aria-hidden="true">{ekg.label}</span>
-        </time>
-      </p>
-      <Countdown className="eyebrow mt-3 !text-[0.72rem]" />
-
-      <p
-        className="mt-7 font-display text-[clamp(1.35rem,2.5vw,2.3rem)] tracking-[0.02em] text-ivory/90"
-        data-reveal
-        style={{ "--reveal-delay": "180ms" } as React.CSSProperties}
       >
         How healthy is your money?
       </p>
 
-      <div className="mt-10" data-reveal style={{ "--reveal-delay": "260ms" } as React.CSSProperties}>
+      <div
+        className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
+        data-reveal
+        style={{ "--reveal-delay": "180ms" } as React.CSSProperties}
+      >
         {variant === "page" ? (
-          <Button href="#register" size="lg" arrow>
-            Save my spot
-          </Button>
+          <>
+            <Button href="#book" size="lg" arrow>
+              Book EKG
+            </Button>
+            <Button href="#next" size="lg" variant="outline">
+              Save my spot
+            </Button>
+          </>
         ) : (
           <Button href="/ekg" size="lg" arrow>
             Explore EKG

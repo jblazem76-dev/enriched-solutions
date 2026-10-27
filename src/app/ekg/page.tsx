@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
 import { MiniPulse } from "@/components/art/MiniPulse";
 import { EkgHero } from "@/components/chapters/EkgHero";
-import { SignupForm } from "@/components/forms/SignupForm";
+import { BookingForm } from "@/components/forms/BookingForm";
 import { NextUp } from "@/components/home/NextUp";
+import { Countdown } from "@/components/site/Countdown";
+import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Tbc } from "@/components/ui/Tbc";
 import { ekg } from "@/lib/site";
 
 const description =
-  "EKG: The Heart of Our Money. Earn it. Keep it. Grow it. 11.17.26. How healthy is your money? Save your spot.";
+  "EKG: The Heart of Our Money. A speaking engagement from Enriched Solutions, available for conferences, events or as a solo offering. Earn it. Keep it. Grow it. Book EKG.";
 
 export const metadata: Metadata = {
   title: "EKG: The Heart of Our Money",
@@ -18,7 +20,7 @@ export const metadata: Metadata = {
   openGraph: { title: "EKG: The Heart of Our Money | Enriched Solutions", description, url: "/ekg" },
 };
 
-// DRAFT COPY. The hero sheet gives the three words and the date; these one-line readings of
+// DRAFT COPY. The hero sheet gives the three words; these one-line readings of
 // each word are placeholders until the approved EKG messaging arrives.
 const pillars = [
   {
@@ -40,6 +42,16 @@ const pillars = [
     body: "Make it work for you, so what you build can outlast a paycheck.",
   },
 ] as const;
+
+// DRAFT COPY. The three formats are the owner's own words (conferences, events, or a solo offering);
+// nothing about length, audience size or rates is stated until it is confirmed.
+const formats = [
+  { title: "Conferences", body: "Add EKG to your conference program." },
+  { title: "Events", body: "Bring EKG to your organization, community or private event." },
+  { title: "Solo", body: "EKG as a stand-alone offering." },
+] as const;
+
+const delay = (ms: number) => ({ "--reveal-delay": `${ms}ms` }) as React.CSSProperties;
 
 export default function EkgPage() {
   return (
@@ -63,7 +75,7 @@ export default function EkgPage() {
               <li
                 key={pillar.n}
                 data-reveal
-                style={{ "--reveal-delay": `${index * 100}ms` } as React.CSSProperties}
+                style={delay(index * 100)}
                 className="rounded-3xl border border-gold-500/20 bg-gradient-to-b from-navy-800/70 to-navy-900/40 p-8 md:p-10"
               >
                 <div className="flex items-center justify-between">
@@ -78,29 +90,70 @@ export default function EkgPage() {
         </Container>
       </section>
 
-      <section id="details" aria-labelledby="details-title" className="relative bg-navy-900 py-24 md:py-32">
+      <section id="formats" aria-labelledby="formats-title" className="relative bg-navy-900 py-24 md:py-32">
         <div aria-hidden="true" className="hairline absolute inset-x-0 top-0" />
-        <Container className="grid gap-14 lg:grid-cols-[1fr_1.15fr] lg:gap-20">
+        <Container>
           <SectionHeading
-            eyebrow="The details"
+            eyebrow="Formats"
             title={
-              <span id="details-title">
-                Mark <em>the date</em>
+              <span id="formats-title">
+                Three ways to <em>book EKG</em>
               </span>
             }
-            lead="The date is set. Everything else we will confirm by email, to everyone who saves a spot."
+            lead="EKG is a speaking engagement from Enriched Solutions. Book it for a conference, for an event, or as a solo offering."
           />
+          <ul className="mt-14 grid gap-6 md:grid-cols-3">
+            {formats.map((format, index) => (
+              <li
+                key={format.title}
+                data-reveal
+                style={delay(index * 100)}
+                className="rounded-3xl border border-gold-500/20 bg-navy-950/60 p-8 md:p-10"
+              >
+                <h3 className="text-[clamp(2rem,3.2vw,2.6rem)] text-ivory">{format.title}</h3>
+                <p className="mt-4 text-[1rem] leading-[1.8] text-ivory/75">{format.body}</p>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-8 flex flex-wrap items-center gap-3 text-[0.95rem] text-ivory/70" data-reveal>
+            Length, format and rates <Tbc />
+          </p>
+          <div className="mt-10" data-reveal>
+            <Button href="#book" size="lg" arrow>
+              Book EKG
+            </Button>
+          </div>
+        </Container>
+      </section>
+
+      <section id="next" aria-labelledby="next-title" className="relative bg-navy-950 py-24 md:py-32">
+        <div aria-hidden="true" className="hairline absolute inset-x-0 top-0" />
+        <Container className="grid gap-14 lg:grid-cols-[1fr_1.15fr] lg:gap-20">
+          <div>
+            <SectionHeading
+              eyebrow="On the calendar"
+              title={
+                <span id="next-title">
+                  Mark <em>the date</em>
+                </span>
+              }
+              lead={`EKG is booked for ${ekg.label}. Registration runs through a link from the host.`}
+            />
+            <Countdown className="eyebrow mt-8 !text-[0.72rem]" />
+          </div>
           <dl
-            className="divide-y divide-gold-500/15 rounded-3xl border border-gold-500/20 bg-navy-950/60 px-8 py-2 md:px-10"
+            className="divide-y divide-gold-500/15 rounded-3xl border border-gold-500/20 bg-navy-900/60 px-8 py-2 md:px-10"
             data-reveal
           >
             <div className="flex flex-col gap-2 py-6 sm:flex-row sm:items-baseline sm:justify-between">
               <dt className="eyebrow !text-[0.7rem]">Date</dt>
               <dd className="font-display text-2xl text-ivory sm:text-right">
-                {ekg.weekday}, November 17, 2026 <span className="text-gold-400">({ekg.label})</span>
+                <time dateTime={`${ekg.year}-${ekg.monthIndex + 1}-${ekg.day}`}>
+                  {ekg.weekday}, November 17, 2026 <span className="text-gold-400">({ekg.label})</span>
+                </time>
               </dd>
             </div>
-            {(["Time", "Where", "Format", "Tickets"] as const).map((label) => (
+            {(["Time", "Where"] as const).map((label) => (
               <div key={label} className="flex flex-col gap-2 py-6 sm:flex-row sm:items-center sm:justify-between">
                 <dt className="eyebrow !text-[0.7rem]">{label}</dt>
                 <dd>
@@ -108,33 +161,40 @@ export default function EkgPage() {
                 </dd>
               </div>
             ))}
+            <div className="flex flex-col gap-3 py-6 sm:flex-row sm:items-center sm:justify-between">
+              <dt className="eyebrow !text-[0.7rem]">Registration</dt>
+              <dd>
+                {ekg.registrationUrl ? (
+                  <Button href={ekg.registrationUrl} variant="outline" target="_blank" rel="noopener noreferrer">
+                    Save my spot<span className="sr-only"> (opens in a new tab)</span>
+                  </Button>
+                ) : (
+                  <Tbc>Link coming soon</Tbc>
+                )}
+              </dd>
+            </div>
           </dl>
         </Container>
       </section>
 
-      <section id="register" aria-labelledby="register-title" className="relative bg-navy-950 py-24 md:py-32">
+      <section id="book" aria-labelledby="book-title" className="relative bg-navy-900 py-24 md:py-32">
         <div aria-hidden="true" className="hairline absolute inset-x-0 top-0" />
-        <Container className="grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-20">
+        <Container className="grid gap-14 lg:grid-cols-[1fr_1.25fr] lg:gap-20">
           <SectionHeading
-            eyebrow="Save your spot"
+            eyebrow="Book EKG"
             title={
-              <span id="register-title">
-                How healthy is your <em>money?</em>
+              <span id="book-title">
+                Tell us about <em>your event</em>
               </span>
             }
-            lead="11.17.26. Add your details and we will send the time, place and how to join as soon as they are confirmed."
+            lead="Tell us what you are planning and we will take it from there."
           />
           <div
-            className="rounded-3xl border border-gold-500/25 bg-gradient-to-b from-navy-800/60 to-navy-900/60 p-8 md:p-10"
+            className="rounded-3xl border border-gold-500/25 bg-gradient-to-b from-navy-800/60 to-navy-950/60 p-8 md:p-10"
             data-reveal
-            style={{ "--reveal-delay": "120ms" } as React.CSSProperties}
+            style={delay(120)}
           >
-            <SignupForm
-              source="ekg"
-              buttonLabel="Save my spot"
-              successTitle="Your spot is saved."
-              successBody="We'll email you the details for EKG as soon as they're confirmed."
-            />
+            <BookingForm />
           </div>
         </Container>
       </section>
