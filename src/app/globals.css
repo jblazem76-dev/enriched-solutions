@@ -1,0 +1,276 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   Enriched Solutions design tokens.
+   Sampled from the three hero sheets (EKG, ES+, Golf & Heels):
+   navy ground, black ground, fairway green ground, one gold.
+   ------------------------------------------------------------------ */
+@theme {
+  --color-ink: #05070b;
+
+  --color-navy-950: #070f1b;
+  --color-navy-900: #0b1626;
+  --color-navy-800: #102036;
+  --color-navy-700: #172c48;
+  --color-navy-600: #1f3a5d;
+
+  --color-night-950: #030303;
+  --color-night-900: #0a0a0a;
+  --color-night-800: #11100f;
+  --color-night-700: #1b1a18;
+  --color-night-600: #302d27;
+
+  --color-fairway-950: #030a07;
+  --color-fairway-900: #07120c;
+  --color-fairway-800: #0f1a0e;
+  --color-fairway-700: #1a2a17;
+  --color-fairway-600: #222b17;
+  --color-olive: #5f5c45;
+  --color-sand: #918869;
+
+  --color-gold-100: #f6ecc9;
+  --color-gold-200: #ecd9a0;
+  --color-gold-300: #e2c57c;
+  --color-gold-400: #d4ae5c;
+  --color-gold-500: #c89d47;
+  --color-gold-600: #a98334;
+  --color-gold-700: #86672a;
+  --color-gold-800: #5e4a1f;
+
+  --color-ivory: #f2f3f7;
+  --color-bone: #f3eee2;
+
+  --breakpoint-xs: 26rem;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Font variables are defined at runtime by next/font on <html>, so these must be inline. */
+@theme inline {
+  --font-display: var(--font-bodoni), "Bodoni 72", Didot, "Times New Roman", serif;
+  --font-sans: var(--font-montserrat), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-impact: var(--font-anton), Impact, "Arial Narrow Bold", sans-serif;
+}
+
+@layer base {
+  html {
+    background: var(--color-ink);
+    color: var(--color-ivory);
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    line-height: 1.65;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  ::selection {
+    background: var(--color-gold-500);
+    color: var(--color-night-950);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-gold-300);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@layer components {
+  /* Small tracked caps, the "EARN IT. KEEP IT. GROW IT." voice. */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.72rem;
+    line-height: 1.4;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--color-gold-400);
+  }
+  @media (min-width: 48rem) {
+    .eyebrow {
+      font-size: 0.8rem;
+    }
+  }
+
+  /* Gold metal text. Solid colour first so it never disappears if clipping is unsupported. */
+  .gold-text {
+    color: var(--color-gold-400);
+    background-image: linear-gradient(
+      100deg,
+      #8a6a28 0%,
+      #d4ae5c 26%,
+      #f3e2a6 50%,
+      #c89d47 74%,
+      #86672a 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hairline {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-gold-500), transparent);
+    opacity: 0.55;
+  }
+
+  /* Film grain overlay: put on an absolutely positioned child. */
+  .grain {
+    pointer-events: none;
+    background-image: url("/patterns/grain.svg");
+    opacity: 0.07;
+    mix-blend-mode: overlay;
+  }
+
+  .hex-bg {
+    background-image: url("/patterns/hex.svg");
+    background-size: 776px 504px;
+  }
+
+  /*
+   * Places the pulse line's flat baseline (2/3 of the SVG's height) just under the "EKG" lettering.
+   * The parent is the EKG letter block, so 105% is a little below its bottom edge.
+   */
+  .ekg-pulse {
+    height: clamp(8rem, 21vw, 18rem);
+    top: calc(105% - clamp(8rem, 21vw, 18rem) * 0.667);
+  }
+}
+
+/* Gold gradient text relies on clipping; in forced-colors mode fall back to a plain text colour. */
+@media (forced-colors: active) {
+  .gold-text {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Scroll reveal. Content is only hidden when JS is present AND hydration
+   has not yet happened, with a pure-CSS failsafe so a failed bundle can
+   never leave content invisible.
+   ------------------------------------------------------------------ */
+[data-reveal] {
+  transition:
+    opacity 0.9s var(--ease-out-expo),
+    transform 0.9s var(--ease-out-expo);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.js [data-reveal]:not([data-in]) {
+  opacity: 0;
+  transform: translateY(1.5rem);
+}
+.js:not([data-hydrated]) [data-reveal]:not([data-in]) {
+  animation: reveal-failsafe 0.01s linear 4s forwards;
+}
+@keyframes reveal-failsafe {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------
+   EKG pulse line
+   ------------------------------------------------------------------ */
+.pulse-glow {
+  filter: drop-shadow(0 0 5px rgb(212 174 92 / 0.55));
+}
+.pulse-trace {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: pulse-draw 3.4s var(--ease-out-expo) 0.3s forwards;
+}
+.pulse-runner {
+  stroke-dasharray: 0.045 1;
+  stroke-dashoffset: 1.045;
+  animation: pulse-run 7s linear 4s infinite;
+}
+@keyframes pulse-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes pulse-run {
+  0% {
+    stroke-dashoffset: 1.045;
+  }
+  55%,
+  100% {
+    stroke-dashoffset: -0.045;
+  }
+}
+.pulse-orb {
+  animation: orb-beat 2.6s ease-in-out 1.6s infinite;
+}
+@keyframes orb-beat {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.35);
+  }
+  28% {
+    opacity: 0.8;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+.float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+/* Everything that moves is off for people who ask for less motion. */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+  .pulse-trace {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .pulse-runner,
+  .pulse-orb,
+  .float-slow {
+    animation: none;
+  }
+  .pulse-runner {
+    opacity: 0;
+  }
+}
