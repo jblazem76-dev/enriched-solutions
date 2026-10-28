@@ -29,9 +29,6 @@ export function StubPage({ eyebrow, title, body, ctaLabel = "Get in touch", ctaH
           {title}
         </h1>
         <div className="mt-8 max-w-2xl space-y-5 text-lg leading-[1.8] text-ivory/80">{body}</div>
-        <p className="mt-10 max-w-xl border-l border-gold-500/50 pl-5 text-[0.95rem] leading-relaxed text-ivory/65">
-          This page is being redesigned. The new version is coming soon.
-        </p>
         <div className="mt-10">
           <Button href={ctaHref} size="lg" arrow>
             {ctaLabel}
