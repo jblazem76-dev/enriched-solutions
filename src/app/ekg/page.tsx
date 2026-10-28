@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { MiniPulse } from "@/components/art/MiniPulse";
 import { EkgHero } from "@/components/chapters/EkgHero";
-import { BookingForm } from "@/components/forms/BookingForm";
 import { NextUp } from "@/components/home/NextUp";
 import { Countdown } from "@/components/site/Countdown";
 import { RegistrationLink } from "@/components/site/RegistrationLink";
@@ -120,7 +119,7 @@ export default function EkgPage() {
             Length, format and rates <Tbc />
           </p>
           <div className="mt-10" data-reveal>
-            <Button href="#book" size="lg" arrow>
+            <Button href="/ekg/book" size="lg" arrow>
               Book EKG
             </Button>
           </div>
@@ -173,28 +172,6 @@ export default function EkgPage() {
               </dd>
             </div>
           </dl>
-        </Container>
-      </section>
-
-      <section id="book" aria-labelledby="book-title" className="relative bg-navy-900 py-24 md:py-32">
-        <div aria-hidden="true" className="hairline absolute inset-x-0 top-0" />
-        <Container className="grid gap-14 lg:grid-cols-[1fr_1.25fr] lg:gap-20">
-          <SectionHeading
-            eyebrow="Book EKG"
-            title={
-              <span id="book-title">
-                Tell us about <em>your event</em>
-              </span>
-            }
-            lead="Tell us what you are planning and we will take it from there."
-          />
-          <div
-            className="rounded-3xl border border-gold-500/25 bg-gradient-to-b from-navy-800/60 to-navy-950/60 p-8 md:p-10"
-            data-reveal
-            style={delay(120)}
-          >
-            <BookingForm />
-          </div>
         </Container>
       </section>
 

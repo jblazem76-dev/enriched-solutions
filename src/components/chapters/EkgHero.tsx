@@ -13,7 +13,7 @@ export function EkgHero({ variant, id, className }: HeroProps) {
       id={id}
       aria-labelledby="ekg-title"
       className={cn(
-        "relative isolate flex min-h-svh flex-col items-center justify-center overflow-hidden bg-navy-900 px-6 pb-20 pt-32 text-center",
+        "relative isolate flex min-h-[var(--hero-min-h,100svh)] flex-col items-center justify-center overflow-hidden bg-navy-900 px-6 pb-20 pt-32 text-center",
         className,
       )}
     >
@@ -86,16 +86,10 @@ export function EkgHero({ variant, id, className }: HeroProps) {
       >
         {variant === "page" ? (
           <>
-            <Button href="#book" size="lg" arrow>
+            <Button href="/ekg/book" size="lg" arrow>
               Book EKG
             </Button>
-            {ekg.registrationUrl ? (
-              <RegistrationLink href={ekg.registrationUrl} size="lg" />
-            ) : (
-              <Button href="#next" size="lg" variant="outline">
-                Save my spot
-              </Button>
-            )}
+            {ekg.registrationUrl && <RegistrationLink href={ekg.registrationUrl} size="lg" />}
           </>
         ) : (
           <Button href="/ekg" size="lg" arrow>

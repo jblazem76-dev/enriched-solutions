@@ -4,10 +4,13 @@ Website for [Enriched Solutions](https://www.enrichedsolutions.net): the home pa
 
 | Route | What it is | Status |
 | --- | --- | --- |
-| `/` | Home: **EKG**, **ES+** and **Golf & Heels** as three full-height chapters, then a path to the rest of the site | Designed |
+| `/` | Home: **EKG**, **ES+** and **Golf & Heels** as three hero slides that move side to side (arrows, labelled tabs, swipe, arrow keys), then a path to the rest of the site | Designed |
 | `/ekg` | EKG: The Heart of Our Money. A speaking engagement that can be booked for conferences, events or as a solo offering, with a booking form and the **11.17.26** appearance on the calendar | Designed. Time, venue, rates and the registration link are placeholders (see below) |
 | `/es-plus` | ES+ app: Coming 2027 | Designed |
 | `/golf-and-heels` | Golf & Heels: Spring 2027 | Designed |
+| `/ekg/book` | The EKG booking form, on its own page | Designed |
+| `/es-plus/waitlist` | The ES+ waitlist form, on its own page | Designed |
+| `/golf-and-heels/interest` | The Golf & Heels interest-list form, on its own page | Designed |
 | `/consulting` `/speaking` `/about` | Short holding pages with the live site's copy. `/speaking` features EKG and links to `/ekg` | **Next pass** |
 | `/retreat` | The enRICHed Experience, the 3-day annual retreat, carried over from the previous site | Live copy. **Next dates to be confirmed** (the old page said "Sept 2025", which has passed) |
 | `/privacy` `/terms` | Placeholders (`noindex`) | **Real text needed before launch** |
@@ -86,7 +89,7 @@ Nothing below was invented. Each item is marked in the page as "To be confirmed"
    confirmed" (search for `<Tbc />` in `src/app/ekg/page.tsx`). The three one-line readings of Earn it / Keep it / Grow it
    and the copy for the three formats are **draft copy**.
    - **Registration for 11.17.26** is the buyer's Google Form (`ekg.registrationUrl` in `src/lib/site.ts`). **Save my spot**
-     (in the hero and in `/ekg#next`) opens it in a new tab, and from the day after 11.17.26 it becomes a disabled
+     (in the hero and in `/ekg#next`) opens it in a popup on the page, with a Close button, and from the day after 11.17.26 it becomes a disabled
      "Registration closed" button. The date is read in the visitor's browser, so a visitor with JavaScript off would still
      see the link: **also close the Google Form itself after the event**.
    - **After 11.17.26**, update or remove the "On the calendar" section in `src/app/ekg/page.tsx`. The countdown hides

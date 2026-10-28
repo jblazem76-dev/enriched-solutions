@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { PhoneMockup } from "@/components/art/PhoneMockup";
 import { EsPlusHero } from "@/components/chapters/EsPlusHero";
-import { SignupForm } from "@/components/forms/SignupForm";
 import { NextUp } from "@/components/home/NextUp";
+import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { BookIcon, ChatIcon, FlagIcon, FlameIcon, TargetIcon, TicketIcon } from "@/components/ui/icons";
@@ -199,7 +199,7 @@ export default function EsPlusPage() {
 
       <section id="waitlist" aria-labelledby="waitlist-title" className="relative bg-night-900 py-24 md:py-32">
         <div aria-hidden="true" className="hairline absolute inset-x-0 top-0" />
-        <Container className="grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-20">
+        <Container>
           <SectionHeading
             eyebrow="Coming 2027"
             title={
@@ -209,17 +209,10 @@ export default function EsPlusPage() {
             }
             lead="ES+ launches in 2027. Join the waitlist and we'll save your spot, and send you early access before anyone else."
           />
-          <div
-            className="rounded-3xl border border-gold-500/25 bg-gradient-to-b from-night-700/60 to-night-800/60 p-8 md:p-10"
-            data-reveal
-            style={{ "--reveal-delay": "120ms" } as React.CSSProperties}
-          >
-            <SignupForm
-              source="es-plus"
-              buttonLabel="Join the waitlist"
-              successTitle="You're on the waitlist."
-              successBody="We'll email you as soon as there's news about ES+."
-            />
+          <div className="mt-10" data-reveal>
+            <Button href="/es-plus/waitlist" size="lg" arrow>
+              Join the waitlist
+            </Button>
           </div>
         </Container>
       </section>

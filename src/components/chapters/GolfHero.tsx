@@ -12,7 +12,7 @@ export function GolfHero({ variant, id, className }: HeroProps) {
       id={id}
       aria-labelledby="golf-title"
       className={cn(
-        "relative isolate flex min-h-svh flex-col items-center overflow-hidden bg-fairway-950 px-6 pb-[23.5rem] pt-28 text-center md:pb-[calc(clamp(14rem,29vw,24rem)+clamp(9rem,13vw,12.5rem)-3rem)]",
+        "relative isolate flex min-h-[var(--hero-min-h,100svh)] flex-col items-center overflow-hidden bg-fairway-950 px-6 pb-[23.5rem] pt-28 text-center md:pb-[calc(clamp(14rem,29vw,24rem)+clamp(9rem,13vw,12.5rem)-3rem)]",
         className,
       )}
     >
@@ -79,7 +79,7 @@ export function GolfHero({ variant, id, className }: HeroProps) {
 
       <div className="mt-8" data-reveal style={{ "--reveal-delay": "220ms" } as React.CSSProperties}>
         {variant === "page" ? (
-          <Button href="#interest" size="lg" arrow>
+          <Button href="/golf-and-heels/interest" size="lg" arrow>
             Join the interest list
           </Button>
         ) : (

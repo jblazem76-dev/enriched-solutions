@@ -9,7 +9,7 @@ import { CloseIcon, MenuIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/cn";
 import { nav, site } from "@/lib/site";
 
-const cta = { href: "/ekg#book", label: "Book EKG" };
+const cta = { href: "/ekg/book", label: "Book EKG" };
 
 export function Header() {
   const pathname = usePathname();

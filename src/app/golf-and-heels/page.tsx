@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { GolfHero } from "@/components/chapters/GolfHero";
-import { SignupForm } from "@/components/forms/SignupForm";
 import { NextUp } from "@/components/home/NextUp";
+import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Tbc } from "@/components/ui/Tbc";
@@ -173,7 +173,7 @@ export default function GolfAndHeelsPage() {
 
       <section id="interest" aria-labelledby="interest-title" className="relative bg-fairway-900 py-24 md:py-32">
         <div aria-hidden="true" className="hairline absolute inset-x-0 top-0" />
-        <Container className="grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-20">
+        <Container>
           <SectionHeading
             eyebrow="Be first to know"
             title={
@@ -183,17 +183,10 @@ export default function GolfAndHeelsPage() {
             }
             lead="Seats will be limited and filling from the interest list first. Get your name in now and be notified the moment registration opens."
           />
-          <div
-            className="rounded-3xl border border-gold-500/25 bg-gradient-to-b from-fairway-700/50 to-fairway-800/50 p-8 md:p-10"
-            data-reveal
-            style={{ "--reveal-delay": "120ms" } as React.CSSProperties}
-          >
-            <SignupForm
-              source="golf-and-heels"
-              buttonLabel="Join the interest list"
-              successTitle="You're on the interest list."
-              successBody="We'll email you the moment registration opens for Golf & Heels."
-            />
+          <div className="mt-10" data-reveal>
+            <Button href="/golf-and-heels/interest" size="lg" arrow>
+              Join the interest list
+            </Button>
           </div>
         </Container>
       </section>

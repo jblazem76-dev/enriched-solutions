@@ -73,6 +73,7 @@ export function PulseLine({ className }: { className?: string }) {
         <path d={PATH} stroke="#d4ae5c" strokeOpacity="0.3" strokeWidth="1.5" />
         <path d={PATH} pathLength={1} className="pulse-trace" stroke="#d4ae5c" strokeWidth="2" />
         <path d={PATH} pathLength={1} className="pulse-runner" stroke="#f6ecc9" strokeWidth="2.8" />
+        <path d={PATH} pathLength={1} className="pulse-runner pulse-runner-b" stroke="#f6ecc9" strokeWidth="2.8" />
       </g>
     </svg>
   );

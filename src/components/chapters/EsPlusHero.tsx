@@ -12,7 +12,7 @@ export function EsPlusHero({ variant, id, className }: HeroProps) {
       id={id}
       aria-labelledby="esplus-title"
       className={cn(
-        "relative isolate flex min-h-svh flex-col items-center overflow-hidden bg-night-950 px-6 pb-16 pt-28 text-center sm:pt-32",
+        "relative isolate flex min-h-[var(--hero-min-h,100svh)] flex-col items-center overflow-hidden bg-night-950 px-6 pb-16 pt-28 text-center sm:pt-32",
         className,
       )}
     >
@@ -63,7 +63,7 @@ export function EsPlusHero({ variant, id, className }: HeroProps) {
 
       <div className="mt-9" data-reveal style={{ "--reveal-delay": "320ms" } as React.CSSProperties}>
         {variant === "page" ? (
-          <Button href="#waitlist" size="lg" arrow>
+          <Button href="/es-plus/waitlist" size="lg" arrow>
             Join the waitlist
           </Button>
         ) : (
