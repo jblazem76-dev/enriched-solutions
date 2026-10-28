@@ -15,6 +15,9 @@ export const site = {
   },
 } as const;
 
+/** A mailto link to the site's contact address with the subject filled in. */
+export const mailto = (subject: string) => `mailto:${site.email}?subject=${encodeURIComponent(subject)}`;
+
 /**
  * EKG is a speaking engagement that can be booked. 11.17.26 is the one appearance on the calendar now
  * (from the hero sheet). Month is 0-indexed in JS Date. After the date passes, update or remove the

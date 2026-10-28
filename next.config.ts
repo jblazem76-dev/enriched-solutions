@@ -28,8 +28,8 @@ const nextConfig: NextConfig = {
   // Pages the previous site had. Temporary (307) so they can be brought back without browsers remembering a redirect.
   async redirects() {
     return [
-      // The cohorts live on the ES+ page now.
-      { source: "/community", destination: "/es-plus#cohorts", permanent: false },
+      // The cohorts used to be described on the ES+ page; that detail is held back until closer to launch.
+      { source: "/community", destination: "/es-plus", permanent: false },
       // The old site removed its slide deck from the site (it is shared as a standalone file).
       { source: "/deck", destination: "/", permanent: false },
     ];

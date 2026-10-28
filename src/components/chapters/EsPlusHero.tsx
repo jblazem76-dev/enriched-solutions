@@ -49,8 +49,8 @@ export function EsPlusHero({ variant, id, className }: HeroProps) {
 
       {/* Headline and lead copy are the LCP candidates, so they are never faded in. */}
       <p className="mt-10 max-w-xl text-[0.95rem] leading-[1.85] text-ivory/80 md:text-base">
-        The ES+ app is where the speaking event energy lives between events. Track goals, complete courses, connect with
-        your cohort, and build the habits that actually stick.
+        The ES+ app is where the speaking event energy lives between events.
+        {variant === "page" && " Join the waitlist to be the first to know."}
       </p>
 
       <div className="mt-9 flex items-center gap-5" data-reveal style={{ "--reveal-delay": "260ms" } as React.CSSProperties}>
