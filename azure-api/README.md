@@ -55,9 +55,9 @@ Set as Function App application settings (local: `local.settings.json`, copied f
 
 | Setting | Required | What it is |
 | --- | --- | --- |
-| `RESEND_API_KEY` | Yes | A Resend key with sending access |
+| `RESEND_API_KEY` | Yes | A Resend key. **Full access** if `RESEND_SEGMENT_ID` is used (contacts can't be saved with a sending-only key) |
 | `LEAD_NOTIFY_EMAIL` | Yes, unless `RESEND_SEGMENT_ID` alone is enough for sign-ups | Where notification emails arrive. Replying answers the person who submitted |
-| `LEAD_FROM_EMAIL` | No | The sender. Empty uses Resend's test sender (`onboarding@resend.dev`), which only delivers to the **Resend account owner's own address**. After verifying a domain in Resend, use e.g. `Enriched Solutions <hello@enrichedsolutions.net>` |
+| `LEAD_FROM_EMAIL` | No | The sender. Empty uses Resend's test sender (`onboarding@resend.dev`), which only delivers to the **Resend account owner's own address**. After the domain is verified in Resend, use e.g. `Enriched Solutions <leads@mail.enrichedsolutions.net>` |
 | `RESEND_SEGMENT_ID` | No | Sign-ups are also saved to this segment. Booking inquiries never are |
 
 Keep `RESEND_API_KEY` in Key Vault and reference it from the app setting as
@@ -76,27 +76,63 @@ npm start           # needs Azure Functions Core Tools v4 (`func`)
 
 ## Deploy
 
-> **These commands were not run.** The build environment could not reach Azure or install the Functions tooling. Treat them
-> as a starting point and check flags with `az functionapp create --help` for your CLI version.
+This is the path used for the Enriched Solutions deployment: a **Flex Consumption** Function App, the Resend key held in
+Key Vault as a secret named `ES-RESEND-KEY`, and a zip built by `npm run package`.
+
+> The Azure steps were run by hand in Azure Cloud Shell and the code was built and tested here, but the final deploy of the zip
+> could not be rehearsed (no access to Azure from the build environment). Check flags with `--help` if your CLI version differs.
+
+**1. Create the app** (Cloud Shell, bash). Flex Consumption apps have no Kudu/SCM site, so deploy with `az functionapp deploy`
+(One Deploy), not `config-zip`.
 
 ```bash
-RG=es-rg; LOC=eastus; APP=es-api-<something-unique>; ST=esapi<unique-lowercase-letters>
-
-az login
-az group create -n $RG -l $LOC
-az storage account create -n $ST -g $RG -l $LOC --sku Standard_LRS
-az functionapp create -g $RG -n $APP --storage-account $ST \
-  --flexconsumption-location $LOC --runtime node --runtime-version 22
-
-az functionapp config appsettings set -g $RG -n $APP --settings \
-  RESEND_API_KEY=<key> LEAD_NOTIFY_EMAIL=<address> RESEND_SEGMENT_ID=<segment id>
-
-npm ci && npm run build && npm prune --omit=dev
-func azure functionapp publish $APP
-
-curl https://$APP.azurewebsites.net/api/health          # {"ok":true}
-az functionapp keys list -g $RG -n $APP                  # the function key for the website
+az group create -n es-rg -l eastus
+az storage account create -n <storage> -g es-rg -l eastus --sku Standard_LRS
+az functionapp create -g es-rg -n <app> --storage-account <storage> \
+  --flexconsumption-location eastus --runtime node --runtime-version 22
 ```
+
+**2. Let the app read the key, and only that key.** Turn on its managed identity, then grant **Key Vault Secrets User scoped to the
+one secret**, never the whole vault (a vault shared with other projects would otherwise expose all of its secrets):
+
+```bash
+PID=$(az functionapp identity assign -g es-rg -n <app> --query principalId -o tsv)
+VAULT_ID=$(az keyvault show -n <vault> --query id -o tsv)
+az role assignment create --assignee-object-id $PID --assignee-principal-type ServicePrincipal \
+  --role "Key Vault Secrets User" --scope "$VAULT_ID/secrets/ES-RESEND-KEY"
+```
+
+This needs a vault using Azure RBAC. A vault using access policies cannot be limited to one secret; use a separate vault.
+
+**3. Settings:**
+
+```bash
+az functionapp config appsettings set -g es-rg -n <app> --settings \
+  "RESEND_API_KEY=@Microsoft.KeyVault(SecretUri=https://<vault>.vault.azure.net/secrets/ES-RESEND-KEY/)" \
+  "LEAD_NOTIFY_EMAIL=<address>" "RESEND_SEGMENT_ID=<segment id>"
+```
+
+The CLI prints every value as `null`; that is normal. In the portal (Environment variables) `RESEND_API_KEY` should show a green
+Key Vault reference status. The key must be a **Full access** Resend key: saving sign-ups as contacts is not allowed with a
+sending-only key.
+
+**4. Build and deploy the code:**
+
+```bash
+cd azure-api
+npm run package                  # builds es-api.zip (compiled code + production dependencies only)
+```
+
+Upload `es-api.zip` to Cloud Shell (Manage files, Upload), then:
+
+```bash
+az functionapp deploy -g es-rg -n <app> --src-path ~/es-api.zip --type zip
+curl https://$(az functionapp show -g es-rg -n <app> --query defaultHostName -o tsv)/api/health   # {"ok":true}
+az functionapp keys list -g es-rg -n <app> --query functionKeys.default -o tsv                    # the key for the website
+```
+
+Treat that function key like a password: put it straight into the website's `LEAD_WEBHOOK_KEY` setting and do not paste it
+into chats or tickets.
 
 ### Connect the website
 

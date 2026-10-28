@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "prestart": "npm run build",
-    "start": "func start"
+    "start": "func start",
+    "package": "bash scripts/package.sh"
   },
   "engines": {
     "node": ">=20"
