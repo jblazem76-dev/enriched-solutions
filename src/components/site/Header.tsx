@@ -53,14 +53,19 @@ export function Header() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500",
-        scrolled || open
-          ? "border-b border-gold-500/15 bg-ink/80 backdrop-blur-md"
-          : "border-b border-transparent bg-transparent",
-      )}
-    >
+    <header className="fixed inset-x-0 top-0 z-50">
+      {/*
+        The frosted bar is its own layer, NOT a style on <header>. A blurred (backdrop-filter) element becomes the
+        reference frame for anything `position: fixed` inside it, which squashed the mobile menu to the header's
+        height. Keeping the blur on a sibling layer lets the menu size itself to the screen.
+      */}
+      <div
+        aria-hidden="true"
+        className={cn(
+          "pointer-events-none absolute inset-0 -z-10 border-b transition-[background-color,border-color,backdrop-filter] duration-500",
+          scrolled || open ? "border-gold-500/15 bg-ink/80 backdrop-blur-md" : "border-transparent bg-transparent",
+        )}
+      />
       <div className="mx-auto flex h-20 w-full max-w-[88rem] items-center justify-between px-6 sm:px-10 lg:px-16">
         <Link href="/" className="rounded-sm">
           <Logo />
@@ -120,7 +125,7 @@ export function Header() {
       <div
         id="mobile-menu"
         hidden={!open}
-        className="fixed inset-x-0 bottom-0 top-20 overflow-y-auto bg-ink/[0.97] px-6 pb-12 pt-8 sm:px-10 lg:hidden"
+        className="fixed inset-x-0 bottom-0 top-20 overflow-y-auto bg-ink/[0.97] px-6 pb-12 pt-8 sm:px-10 lg:hidden [@media(max-height:620px)]:pt-3"
       >
         <nav aria-label="Mobile">
           <ul className="flex flex-col">
@@ -131,7 +136,7 @@ export function Header() {
                   href={item.href}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={cn(
-                    "flex items-baseline justify-between py-5 font-display text-[clamp(1.9rem,8vw,2.8rem)] leading-none transition-colors",
+                    "flex items-baseline justify-between py-5 font-display text-[clamp(1.9rem,8vw,2.8rem)] leading-none transition-colors [@media(max-height:620px)]:py-2.5 [@media(max-height:620px)]:text-[1.6rem]",
                     isActive(item.href) ? "text-gold-300" : "text-ivory hover:text-gold-300",
                   )}
                 >
@@ -140,7 +145,7 @@ export function Header() {
               </li>
             ))}
           </ul>
-          <div className="mt-10 flex flex-col gap-4">
+          <div className="mt-10 flex flex-col gap-4 [@media(max-height:620px)]:mt-5">
             <Button href={cta.href} size="lg">
               {cta.label}
             </Button>
