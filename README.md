@@ -28,7 +28,7 @@ npm install
 npm run dev      # http://localhost:3000
 npm run build && npm run start
 npm run lint
-npx tsc --noEmit
+npx next typegen && npx tsc --noEmit   # typegen creates Next's route types, which a fresh clone does not have yet
 ```
 
 ## Configuration
