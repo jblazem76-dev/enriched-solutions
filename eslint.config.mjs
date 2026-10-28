@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Separate package (Azure Functions) with its own tooling.
+    "azure-api/**",
   ]),
 ]);
 

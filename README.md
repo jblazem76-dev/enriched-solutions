@@ -10,7 +10,8 @@ Website for [Enriched Solutions](https://www.enrichedsolutions.net): the home pa
 | `/golf-and-heels` | Golf & Heels: Spring 2027 | Designed |
 | `/consulting` `/speaking` `/about` | Short holding pages with the live site's copy. `/speaking` features EKG and links to `/ekg` | **Next pass** |
 | `/privacy` `/terms` | Placeholders (`noindex`) | **Real text needed before launch** |
-| `POST /api/lead` | Receives the forms and delivers them through the Resend API (or a webhook) | Needs `RESEND_API_KEY` and `LEAD_NOTIFY_EMAIL` |
+| `POST /api/lead` | Receives the forms and delivers them through the Resend API (or forwards them to a webhook, such as the Azure API) | Needs `RESEND_API_KEY` and `LEAD_NOTIFY_EMAIL`, or `LEAD_WEBHOOK_URL` |
+| `azure-api/` | **Separate package**: a shared Azure Functions API that delivers leads through Resend for every ES project | Built and tested; **not yet deployed** (see `azure-api/README.md`) |
 
 ## Stack
 
@@ -42,7 +43,9 @@ the **Resend API**. Set these in your host's environment variables:
 - `RESEND_SEGMENT_ID` (optional): sign-ups (not booking requests) are also saved as contacts in this Resend segment.
   Booking requests are only emailed: an organizer asking about EKG has not agreed to a marketing list.
 - `LEAD_WEBHOOK_URL` (alternative): any endpoint that accepts a JSON POST (Zapier, Make, your own API). Used only when
-  `RESEND_API_KEY` is empty.
+  `RESEND_API_KEY` is empty. **To use the shared Azure API** (`azure-api/`, which delivers through Resend for all ES
+  projects), set this to its `/api/lead` URL, set `LEAD_WEBHOOK_KEY` to its function key, and leave `RESEND_API_KEY` empty.
+  See `azure-api/README.md`.
 
 **With none of these set, `/api/lead` answers 503 and the forms tell visitors to email instead.** It never pretends to have
 saved a request. If delivery fails, the form shows an error with the email address; the server log records the status and
@@ -78,10 +81,12 @@ Nothing below was invented. Each item is marked in the page as "To be confirmed"
 1. **EKG details**: length, format and rates of the three ways to book, and the time and venue of 11.17.26, show "To be
    confirmed" (search for `<Tbc />` in `src/app/ekg/page.tsx`). The three one-line readings of Earn it / Keep it / Grow it
    and the copy for the three formats are **draft copy**.
-   - **Registration link for 11.17.26**: supplied by the buyer. Set `ekg.registrationUrl` in `src/lib/site.ts` and the
-     "Registration" row on `/ekg#next` turns into a working **Save my spot** button. Until then it says "Link coming soon".
+   - **Registration for 11.17.26** is the buyer's Google Form (`ekg.registrationUrl` in `src/lib/site.ts`). **Save my spot**
+     (in the hero and in `/ekg#next`) opens it in a new tab, and from the day after 11.17.26 it becomes a disabled
+     "Registration closed" button. The date is read in the visitor's browser, so a visitor with JavaScript off would still
+     see the link: **also close the Google Form itself after the event**.
    - **After 11.17.26**, update or remove the "On the calendar" section in `src/app/ekg/page.tsx`. The countdown hides
-     itself once the date passes, but the section would still announce a past date.
+     itself and the button goes dead, but the section would still announce a past date.
    - **Forms**: verify `enrichedsolutions.net` in Resend, then set `LEAD_FROM_EMAIL` (see Configuration). The contact-saving
      call to Resend could not be checked against Resend's docs from the build environment, so send one test sign-up after
      setting `RESEND_SEGMENT_ID` and confirm the contact appears. Notification emails are tested end to end against a mock.

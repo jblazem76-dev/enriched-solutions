@@ -27,10 +27,14 @@ export const ekg = {
   day: 17,
   weekday: "Tuesday",
   /**
-   * Registration link supplied by the host of the 11.17.26 appearance. Null until it arrives; the page says
-   * so honestly instead of showing a dead button. Set it here and "Save my spot" starts working.
+   * Registration form supplied by the host of the 11.17.26 appearance. "Save my spot" opens it in a new tab and
+   * goes dead ("Registration closed") from the day after the date. Null would show "Link coming soon" instead.
+   * Also close the form itself after the event; the button only controls this site's link to it.
    */
-  registrationUrl: null as string | null,
+  registrationUrl:
+    "https://docs.google.com/forms/d/e/1FAIpQLSeTJXHiU5uBS4dUiuwgzv5FPyv5wnWAvzXZC8rQm4Jn-5JIcg/viewform?pli=1" as
+      | string
+      | null,
 } as const;
 
 /** Ways to book EKG, as the booking form and /api/lead both know them. Keep in sync with the form's labels. */

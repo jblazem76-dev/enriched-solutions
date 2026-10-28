@@ -7,7 +7,9 @@ import { ekgFormats, leadSources, type EkgFormat, type LeadSource } from "@/lib/
  *   1. Resend API (RESEND_API_KEY): emails the team a notification (LEAD_NOTIFY_EMAIL), and for sign-ups also
  *      saves the contact to a Resend segment (RESEND_SEGMENT_ID). Booking requests are only emailed: an
  *      organizer asking about EKG has not agreed to be on a marketing list.
- *   2. LEAD_WEBHOOK_URL: the lead is POSTed as JSON (Zapier, Make, your own endpoint).
+ *   2. LEAD_WEBHOOK_URL: the lead is POSTed as JSON (Zapier, Make, your own endpoint). This is how the site talks to
+ *      the shared Azure API in azure-api/, which then delivers through Resend for all ES projects
+ *      (LEAD_WEBHOOK_KEY is that API's function key).
  *
  * It never pretends to have saved a lead: with neither configured it answers 503, and the form tells the
  * visitor to email instead of showing a false "you're in".
@@ -147,10 +149,12 @@ async function viaResend(lead: Lead, apiKey: string): Promise<Outcome> {
 }
 
 async function viaWebhook(lead: Lead, webhook: string): Promise<Outcome> {
+  // For the shared Azure API (azure-api/): an Azure Function with function-level auth wants its key in this header.
+  const key = process.env.LEAD_WEBHOOK_KEY?.trim();
   try {
     const response = await fetch(webhook, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...(key ? { "x-functions-key": key } : {}) },
       body: JSON.stringify({ ...lead, site: "enrichedsolutions.net" }),
       signal: AbortSignal.timeout(8_000),
     });

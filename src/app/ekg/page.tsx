@@ -4,6 +4,7 @@ import { EkgHero } from "@/components/chapters/EkgHero";
 import { BookingForm } from "@/components/forms/BookingForm";
 import { NextUp } from "@/components/home/NextUp";
 import { Countdown } from "@/components/site/Countdown";
+import { RegistrationLink } from "@/components/site/RegistrationLink";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -165,9 +166,7 @@ export default function EkgPage() {
               <dt className="eyebrow !text-[0.7rem]">Registration</dt>
               <dd>
                 {ekg.registrationUrl ? (
-                  <Button href={ekg.registrationUrl} variant="outline" target="_blank" rel="noopener noreferrer">
-                    Save my spot<span className="sr-only"> (opens in a new tab)</span>
-                  </Button>
+                  <RegistrationLink href={ekg.registrationUrl} />
                 ) : (
                   <Tbc>Link coming soon</Tbc>
                 )}

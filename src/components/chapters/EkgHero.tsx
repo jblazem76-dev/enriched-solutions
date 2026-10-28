@@ -1,6 +1,8 @@
 import { PulseLine } from "@/components/art/PulseLine";
+import { RegistrationLink } from "@/components/site/RegistrationLink";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/cn";
+import { ekg } from "@/lib/site";
 import type { HeroProps } from "./types";
 
 /** EKG, "The Heart of Our Money". Navy ground, gold trace. A bookable speaking engagement, so no single date here. */
@@ -87,9 +89,13 @@ export function EkgHero({ variant, id, className }: HeroProps) {
             <Button href="#book" size="lg" arrow>
               Book EKG
             </Button>
-            <Button href="#next" size="lg" variant="outline">
-              Save my spot
-            </Button>
+            {ekg.registrationUrl ? (
+              <RegistrationLink href={ekg.registrationUrl} size="lg" />
+            ) : (
+              <Button href="#next" size="lg" variant="outline">
+                Save my spot
+              </Button>
+            )}
           </>
         ) : (
           <Button href="/ekg" size="lg" arrow>
