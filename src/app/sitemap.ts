@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
 
-const routes = ["/", "/ekg", "/es-plus", "/golf-and-heels", "/consulting", "/speaking", "/about"];
+const routes = ["/", "/ekg", "/es-plus", "/golf-and-heels", "/consulting", "/speaking", "/retreat", "/about"];
 
 // Privacy and Terms are placeholders (noindex) and are left out until they are real.
 export default function sitemap(): MetadataRoute.Sitemap {

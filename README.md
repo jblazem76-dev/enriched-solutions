@@ -9,7 +9,11 @@ Website for [Enriched Solutions](https://www.enrichedsolutions.net): the home pa
 | `/es-plus` | ES+ app: Coming 2027 | Designed |
 | `/golf-and-heels` | Golf & Heels: Spring 2027 | Designed |
 | `/consulting` `/speaking` `/about` | Short holding pages with the live site's copy. `/speaking` features EKG and links to `/ekg` | **Next pass** |
+| `/retreat` | The enRICHed Experience, the 3-day annual retreat, carried over from the previous site | Live copy. **Next dates to be confirmed** (the old page said "Sept 2025", which has passed) |
 | `/privacy` `/terms` | Placeholders (`noindex`) | **Real text needed before launch** |
+
+Addresses the previous site had that no longer exist redirect (temporarily, HTTP 307, set in `next.config.ts`): `/community` →
+`/es-plus#cohorts` and `/deck` → `/`.
 | `POST /api/lead` | Receives the forms and delivers them through the Resend API (or forwards them to a webhook, such as the Azure API) | Needs `RESEND_API_KEY` and `LEAD_NOTIFY_EMAIL`, or `LEAD_WEBHOOK_URL` |
 | `azure-api/` | **Separate package**: a shared Azure Functions API that delivers leads through Resend for every ES project | Built and tested; **not yet deployed** (see `azure-api/README.md`) |
 

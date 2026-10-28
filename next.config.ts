@@ -25,6 +25,15 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
+  // Pages the previous site had. Temporary (307) so they can be brought back without browsers remembering a redirect.
+  async redirects() {
+    return [
+      // The cohorts live on the ES+ page now.
+      { source: "/community", destination: "/es-plus#cohorts", permanent: false },
+      // The old site removed its slide deck from the site (it is shared as a standalone file).
+      { source: "/deck", destination: "/", permanent: false },
+    ];
+  },
 };
 
 export default nextConfig;
