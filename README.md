@@ -70,7 +70,7 @@ is used only for "GOLF" and "SPRING 2027".
 - `src/components/chapters/*Hero.tsx`: each hero sheet rebuilt as live, responsive markup. `variant="chapter"` is the home
   page version (links onward); `variant="page"` is the top of that hero's own page.
 - `src/components/art/`: `PulseLine` (the EKG trace), `PhoneMockup`, `MiniPulse`.
-- `src/components/brand/`: `Monogram`, `Seal` (the circular badge as live SVG text), `Logo`.
+- `src/components/brand/`: `Monogram` (inline official mark), `Seal` and `Logo` (official brand-kit files).
 - `src/components/forms/SignupForm.tsx`: visible labels, a honeypot, and honest success / failure states.
 
 ### Accessibility and resilience (verified, not assumed)
@@ -99,10 +99,12 @@ Nothing below was invented. Each item is marked in the page as "To be confirmed"
      setting `RESEND_SEGMENT_ID` and confirm the contact appears. Notification emails are tested end to end against a mock.
 2. **Golf & Heels** is built from the live site's "Women's Growth Day: Indoor Golf Retreat" copy. **Please confirm they are the
    same event.** Exact date and venue are marked "To be confirmed".
-3. **Photos and logo files.** The golf still (`public/images/golf-heels-still.jpg`) is cropped from the hero sheet and is only
-   1260px wide, so it will look soft on large screens: swap in the original photo. The monogram SVG
-   (`src/components/brand/monogram-paths.ts`, `public/brand/`) is **traced from the 200px logo**, which is smooth but not
-   perfect when huge: swap in the designer's vector. `scripts/trace-monogram.py` shows how it was made.
+3. **Photos.** The golf still (`public/images/golf-heels-still.jpg`) is cropped from the hero sheet and is only
+   1260px wide, so it will look soft on large screens: swap in the original photo.
+   **Logos** are the official brand-kit files in `public/brand/` (horizontal and stacked lockups, monogram, seal, each in
+   several colours). The header and footer use the horizontal reverse lockup, the Golf & Heels hero uses the gold seal, and
+   the ES+ hero uses the monogram path in `src/components/brand/monogram-paths.ts` (copied from the brand-kit monogram).
+   The favicon (`src/app/icon.svg`) and the app icon (`src/app/apple-icon.png`) are the gold monogram on navy.
 4. **Consulting, Speaking, About** are holding pages so navigation never 404s. They carry the live site's copy and should be
    replaced in the next pass.
 5. **Privacy and Terms** are placeholders and `noindex`. The site collects email addresses, so real text is required.
